@@ -1,11 +1,12 @@
 import {
-    GraphQLSchema,
-    GraphQLObjectType,
     GraphQLID,
-    GraphQLString,
     GraphQLList,
+    GraphQLObjectType,
+    GraphQLSchema,
+    GraphQLString,
 } from 'graphql/type';
-import { routines, trainers, excercises } from '../SampleData';
+import { excercises, routines, trainers } from '../SampleData';
+import TrainerService from '../services/TrainerService';
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -78,7 +79,7 @@ const RootQuery = new GraphQLObjectType({
         trainers: {
             type: new GraphQLList(TrainerType),
             resolve(parent, args) {
-                return trainers;
+                return new TrainerService().getAllTrainers();
             },
         },
         trainer: {
