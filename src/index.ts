@@ -2,10 +2,14 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import schema from './schema/schema';
 import 'dotenv/config';
+import DatabaseConnection from './database/DatabaseConnection';
+import { sequelize } from './database/Configuration';
 
 const port = process.env.DEV_PORT;
 
 const app = express();
+
+export const database = new DatabaseConnection(sequelize);
 
 app.use(
     '/graphql',
@@ -15,6 +19,6 @@ app.use(
     }),
 );
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Server running on http://localhost:${port}/graphql`);
 });
