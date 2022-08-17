@@ -24,20 +24,7 @@ const RoutineType = new GraphQLObjectType({
         name: { type: GraphQLString },
         trainerId: { type: GraphQLID },
         excerciseIds: {
-            type: ExcerciseType,
-            args: {
-                id: { type: GraphQLID, defaultValue: '' },
-                name: { type: GraphQLString, defaultValue: '' },
-            },
-            resolve(parent, args) {
-                if (args.id || args.name) {
-                    return new ExcerciseService().getExcercise(
-                        args.id,
-                        args.name,
-                    );
-                }
-                return new ExcerciseService().getAllExcercises();
-            },
+            type: new GraphQLList(GraphQLID),
         },
     }),
 });
@@ -49,17 +36,7 @@ const TrainerType = new GraphQLObjectType({
         name: { type: GraphQLString },
         specialty: { type: GraphQLString },
         routineIds: {
-            type: RoutineType,
-            args: {
-                id: { type: GraphQLID, defaultValue: '' },
-                name: { type: GraphQLString, defaultValue: '' },
-            },
-            resolve(parent, args) {
-                if (args.id || args.name) {
-                    return new RoutineService().getRoutine(args.id, args.name);
-                }
-                return new RoutineService().getAllRoutines();
-            },
+            type: new GraphQLList(GraphQLID),
         },
     }),
 });
