@@ -7,6 +7,10 @@ import {
 } from 'graphql/type';
 import { excercises, routines, trainers } from '../SampleData';
 import TrainerService from '../services/TrainerService';
+import { Trainer } from '../models/Trainer';
+import { database } from '../index';
+
+const TrainerConn = Trainer(database);
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -26,10 +30,6 @@ const RoutineType = new GraphQLObjectType({
             type: new GraphQLList(ExcerciseType),
             args: { id: { type: GraphQLID } },
             resolve(parent, args) {
-                console.log(
-                    'What is parent and args',
-                    parent.excercises.find(args.id),
-                );
                 return excercises.find((excercise) =>
                     parent.excercise.find((e) => excercise.id === e.id),
                 );
