@@ -1,26 +1,25 @@
+import Routine from '../models/Routine';
 import { database } from '../index';
-import Trainer from '../models/Trainer';
 
-export default class TrainerService {
-    async getAllTrainers() {
-        const trainer = Trainer(database);
+export default class RoutineService {
+    async getAllRoutines() {
+        const routine = Routine(database);
         try {
-            return await trainer.findAll();
+            return await routine.findAll();
         } catch (error) {
             console.error(error);
             return [];
         }
     }
 
-    async getTrainer(id: string = '', name: string = '') {
-        const trainer = Trainer(database);
-        // TODO: Build Utility method to construct where clause
+    async getRoutine(id: string = '', name: string = '') {
+        const routine = Routine(database);
         const where: string[] = [];
         if (id) where.push(id);
         if (name) where.push(name);
 
         try {
-            return await trainer.findOne({
+            return await routine.findOne({
                 ...where,
             });
         } catch (error) {

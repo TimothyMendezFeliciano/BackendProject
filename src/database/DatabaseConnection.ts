@@ -1,12 +1,12 @@
-import { Trainer } from '../models/Trainer';
-import { Routine } from '../models/Routine';
-import { Excercise } from '../models/Excercise';
-import { Sequelize } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
+import fs from 'fs';
+import path from 'path';
 
 let cachedDB;
+const basename = path.basename(module.filename);
 
 export default class DatabaseConnection {
-    static async init() {
+    async init() {
         if (!cachedDB) {
             cachedDB = new Sequelize(
                 process.env.DATABASE_NAME as string,
@@ -17,30 +17,35 @@ export default class DatabaseConnection {
                     host: process.env.DATABASE_HOST,
                 },
             );
-            await this.associateModels();
         }
+        cachedDB = await this.associateModels();
         return cachedDB;
     }
 
-    static async associateModels() {
-        // const trainer = Trainer(cachedDB);
-        // const routine = Routine(cachedDB);
-        // const excercise = Excercise(cachedDB);
-        // routine.hasOne(trainer, {
-        //     foreignKey: 'id',
-        // });
-        // trainer.belongsToMany(routine, {
-        //     foreignKey: 'id',
-        //     through: 'Routine',
-        // });
-        // routine.hasMany(excercise, {
-        //     foreignKey: 'id',
-        // });
-        // excercise.belongsToMany(routine, {
-        //     foreignKey: 'id',
-        //     through: 'Routine',
-        // });
+    private async associateModels() {
+        const filtered = fs
+            .readdirSync(path.resolve(__dirname, '../models'))
+            .filter(function (file) {
+                return (
+                    file.indexOf('.') !== 0 &&
+                    file !== basename &&
+                    (file.slice(-3) === '.js' || file.slice(-3) === '.ts')
+                );
+            });
+        filtered.forEach(function (file) {
+            const model = require(path.join(
+                path.resolve(__dirname, '../models'),
+                file,
+            )).default(cachedDB, DataTypes);
+            cachedDB[model.name] = model;
+        });
 
-        await cachedDB.sync({ force: true });
+        Object.keys(cachedDB).forEach(function (modelName) {
+            if (cachedDB[modelName].associate) {
+                cachedDB[modelName].associate(cachedDB);
+            }
+        });
+
+        return await cachedDB.sync({ force: false });
     }
 }

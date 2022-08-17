@@ -1,18 +1,39 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, UUID } from 'sequelize';
 
-export function Trainer(sequelize) {
-    return sequelize.define('Trainer', {
-        id: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            primaryKey: true,
-            default: DataTypes.UUIDV4,
+export default function (sequelize) {
+    const trainer = sequelize.define(
+        'trainer',
+        {
+            id: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                primaryKey: true,
+                default: DataTypes.UUIDV4,
+            },
+            name: {
+                type: DataTypes.STRING,
+            },
+            specialty: {
+                type: DataTypes.STRING,
+            },
+            routineIds: {
+                type: DataTypes.ARRAY(DataTypes.UUID),
+                allowNull: true,
+                foreignKey: true,
+            },
         },
-        name: {
-            type: DataTypes.STRING,
+        {
+            indexes: [
+                {
+                    unique: true,
+                    fields: ['id', 'name'],
+                },
+            ],
         },
-        specialty: {
-            type: DataTypes.STRING,
-        },
-    });
+    );
+
+    trainer.associate = (models) => {
+        trainer.hasMany(models.routine);
+    };
+    return trainer;
 }

@@ -3,12 +3,14 @@ import { graphqlHTTP } from 'express-graphql';
 import schema from './schema/schema';
 import 'dotenv/config';
 import DatabaseConnection from './database/DatabaseConnection';
+import Trainer from './models/Trainer';
 
 const port = process.env.DEV_PORT;
 
 const app = express();
 
-export const database = new DatabaseConnection();
+export let database = new DatabaseConnection();
+
 app.use(
     '/graphql',
     graphqlHTTP({
@@ -18,5 +20,6 @@ app.use(
 );
 
 app.listen(port, async () => {
+    database = await database.init();
     console.log(`Server running on http://localhost:${port}/graphql`);
 });

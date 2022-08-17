@@ -5,12 +5,9 @@ import {
     GraphQLSchema,
     GraphQLString,
 } from 'graphql/type';
-import { excercises, routines, trainers } from '../SampleData';
 import TrainerService from '../services/TrainerService';
-import { Trainer } from '../models/Trainer';
-import { database } from '../index';
-
-const TrainerConn = Trainer(database);
+import ExcerciseService from '../services/ExcerciseService';
+import RoutineService from '../services/RoutineService';
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -26,13 +23,20 @@ const RoutineType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         trainerId: { type: GraphQLID },
-        excercises: {
-            type: new GraphQLList(ExcerciseType),
-            args: { id: { type: GraphQLID } },
+        excerciseIds: {
+            type: ExcerciseType,
+            args: {
+                id: { type: GraphQLID, defaultValue: '' },
+                name: { type: GraphQLString, defaultValue: '' },
+            },
             resolve(parent, args) {
-                return excercises.find((excercise) =>
-                    parent.excercise.find((e) => excercise.id === e.id),
-                );
+                if (args.id || args.name) {
+                    return new ExcerciseService().getExcercise(
+                        args.id,
+                        args.name,
+                    );
+                }
+                return new ExcerciseService().getAllExcercises();
             },
         },
     }),
@@ -44,6 +48,19 @@ const TrainerType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         specialty: { type: GraphQLString },
+        routineIds: {
+            type: RoutineType,
+            args: {
+                id: { type: GraphQLID, defaultValue: '' },
+                name: { type: GraphQLString, defaultValue: '' },
+            },
+            resolve(parent, args) {
+                if (args.id || args.name) {
+                    return new RoutineService().getRoutine(args.id, args.name);
+                }
+                return new RoutineService().getAllRoutines();
+            },
+        },
     }),
 });
 
@@ -53,40 +70,40 @@ const RootQuery = new GraphQLObjectType({
         excercises: {
             type: new GraphQLList(ExcerciseType),
             resolve(parent, args) {
-                return excercises;
+                return new ExcerciseService().getAllExcercises();
             },
         },
         excercise: {
             type: ExcerciseType,
-            args: { id: { type: GraphQLID } },
+            args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
             resolve(parent, args) {
-                return excercises.find((excercise) => excercise.id === args.id);
+                return new ExcerciseService().getExcercise(args.id, args.name);
             },
         },
         routines: {
             type: new GraphQLList(RoutineType),
             resolve(parent, args) {
-                return routines;
+                return new RoutineService().getAllRoutines();
             },
         },
         routine: {
             type: RoutineType,
-            args: { id: { type: GraphQLID } },
+            args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
             resolve(parent, args) {
-                return routines.find((routine) => routine.id === args.id);
+                return new RoutineService().getRoutine(args.id, args.name);
             },
         },
         trainers: {
             type: new GraphQLList(TrainerType),
-            resolve(parent, args) {
+            async resolve(parent, args) {
                 return new TrainerService().getAllTrainers();
             },
         },
         trainer: {
             type: TrainerType,
-            args: { id: { type: GraphQLID } },
+            args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
             resolve(parent, args) {
-                return trainers.find((trainer) => trainer.id === args.id);
+                return new TrainerService().getTrainer(args.id, args.name);
             },
         },
     },
