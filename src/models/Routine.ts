@@ -26,7 +26,7 @@ export default function (sequelize) {
 
     routine.associate = (models) => {
         routine.belongsToMany(models.excercise, {
-            through: 'session',
+            through: models.session,
         });
     };
 

@@ -11,6 +11,8 @@ import ExcerciseService from '../services/ExcerciseService';
 import RoutineService from '../services/RoutineService';
 import { GraphQLDateTime } from 'graphql-scalars';
 import { SessionService } from '../services/SessionService';
+import TraineeService from '../services/TraineeService';
+import Trainee from '../models/Trainee';
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -32,8 +34,16 @@ const RoutineType = new GraphQLObjectType({
 const SessionType = new GraphQLObjectType({
     name: 'Session',
     fields: () => ({
-        startDate: { type: GraphQLDateTime },
-        endDate: { type: GraphQLDateTime },
+        sessionDate: { type: GraphQLDateTime },
+    }),
+});
+
+const TraineeType = new GraphQLObjectType({
+    name: 'Trainee',
+    fields: () => ({
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        interest: { type: GraphQLString },
     }),
 });
 
@@ -94,9 +104,30 @@ const RootQuery = new GraphQLObjectType({
                 return new RoutineService().getRoutine(args.id, args.name);
             },
         },
+        trainees: {
+            type: new GraphQLList(TraineeType),
+            resolve(parent, args) {
+                return new TraineeService().getAllTrainees();
+            },
+        },
+        trainee: {
+            type: TraineeType,
+            args: {
+                id: { type: GraphQLID, defaultValue: '' },
+                name: { type: GraphQLString, defaultValue: '' },
+                interest: { type: GraphQLString, defaultValue: '' },
+            },
+            resolve(parent, args) {
+                return new TraineeService().getTrainee(
+                    args.id,
+                    args.name,
+                    args.interest,
+                );
+            },
+        },
         trainers: {
             type: new GraphQLList(TrainerType),
-            async resolve(parent, args) {
+            resolve(parent, args) {
                 return new TrainerService().getAllTrainers();
             },
         },

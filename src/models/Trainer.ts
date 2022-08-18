@@ -39,6 +39,11 @@ export default function (sequelize) {
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
         });
+        trainer.hasMany(models.trainee, {
+            foreignKey: 'trainerId',
+            onDelete: 'NO ACTION',
+            onUpdate: 'CASCADE',
+        });
     };
     return trainer;
 }

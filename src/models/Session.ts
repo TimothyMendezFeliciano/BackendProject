@@ -2,11 +2,7 @@ import { DataTypes } from 'sequelize';
 
 export default function (sequelize) {
     const session = sequelize.define('session', {
-        startDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        endDate: {
+        sessionDate: {
             type: DataTypes.DATE,
             allowNull: false,
         },
