@@ -112,6 +112,36 @@ const mutation = new GraphQLObjectType({
                 return new ExcerciseService().addExcercise(args.name);
             },
         },
+        addRoutine: {
+            type: RoutineType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                trainerId: { type: new GraphQLNonNull(GraphQLID) },
+                excerciseIds: {
+                    type: new GraphQLNonNull(new GraphQLList(GraphQLID)),
+                },
+            },
+            resolve(parent, args) {
+                return new RoutineService().addRoutine(
+                    args.name,
+                    args.trainerId,
+                    args.excerciseIds,
+                );
+            },
+        },
+        deleteRoutine: {
+            type: RoutineType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                trainerId: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new RoutineService().deleteRoutine(
+                    args.name,
+                    args.trainerId,
+                );
+            },
+        },
     },
 });
 

@@ -19,7 +19,7 @@ export default function (sequelize) {
                 foreignKey: true,
             },
             trainerId: {
-                type: DataTypes.ARRAY(DataTypes.UUID),
+                type: DataTypes.UUID,
                 allowNull: false,
                 foreignKey: true,
             },

@@ -33,7 +33,7 @@ export default class TrainerService {
     async addTrainer(name: string, specialty: string) {
         const trainer = Trainer(database);
         try {
-            return trainer.create({
+            return await trainer.create({
                 id: uuid(),
                 name,
                 specialty,

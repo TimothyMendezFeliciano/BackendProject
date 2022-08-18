@@ -33,7 +33,7 @@ export default class ExcerciseService {
     async addExcercise(name: string) {
         const excercise = Excercise(database);
         try {
-            return excercise.create({
+            return await excercise.create({
                 id: uuid(),
                 name,
             });
