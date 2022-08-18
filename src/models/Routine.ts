@@ -13,16 +13,6 @@ export default function (sequelize) {
             name: {
                 type: DataTypes.STRING,
             },
-            excerciseIds: {
-                type: DataTypes.ARRAY(DataTypes.UUID),
-                allowNull: true,
-                foreignKey: true,
-            },
-            trainerId: {
-                type: DataTypes.UUID,
-                allowNull: false,
-                foreignKey: true,
-            },
         },
         {
             indexes: [
@@ -35,7 +25,10 @@ export default function (sequelize) {
     );
 
     routine.associate = (models) => {
-        routine.hasMany(models.excercise);
+        routine.belongsToMany(models.excercise, {
+            through: 'session',
+        });
     };
+
     return routine;
 }

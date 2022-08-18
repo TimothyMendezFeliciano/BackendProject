@@ -44,7 +44,7 @@ export default class RoutineService {
         }
     }
 
-    async addRoutine(name: string, trainerId: string, excerciseIds: string[]) {
+    async addRoutine(name: string, trainerId: string) {
         const routine = Routine(database);
         const trainer = Trainer(database);
         try {
@@ -52,11 +52,15 @@ export default class RoutineService {
                 id: uuid(),
                 name,
                 trainerId,
-                excerciseIds,
+            });
+            const myTrainer = trainer.findAll({
+                where: {
+                    id: trainerId,
+                },
             });
             await trainer.update(
                 {
-                    routineIds: [result.id],
+                    routineIds: [...myTrainer.routineIds, result.id],
                 },
                 {
                     where: {

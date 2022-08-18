@@ -29,5 +29,11 @@ export default function (sequelize) {
         },
     );
 
+    excercise.associate = (models) => {
+        excercise.belongsToMany(models.routine, {
+            through: 'session',
+        });
+    };
+
     return excercise;
 }

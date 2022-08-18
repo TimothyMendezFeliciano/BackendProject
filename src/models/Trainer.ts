@@ -18,11 +18,6 @@ export default function (sequelize) {
             specialty: {
                 type: DataTypes.STRING,
             },
-            routineIds: {
-                type: DataTypes.ARRAY(DataTypes.UUID),
-                allowNull: true,
-                foreignKey: true,
-            },
         },
         {
             indexes: [
@@ -39,7 +34,11 @@ export default function (sequelize) {
     );
 
     trainer.associate = (models) => {
-        trainer.hasMany(models.routine);
+        trainer.hasMany(models.routine, {
+            foreignKey: 'trainerId',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+        });
     };
     return trainer;
 }

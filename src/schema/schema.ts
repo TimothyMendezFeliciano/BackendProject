@@ -9,6 +9,8 @@ import {
 import TrainerService from '../services/TrainerService';
 import ExcerciseService from '../services/ExcerciseService';
 import RoutineService from '../services/RoutineService';
+import { GraphQLDateTime } from 'graphql-scalars';
+import { SessionService } from '../services/SessionService';
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -24,9 +26,14 @@ const RoutineType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         trainerId: { type: GraphQLID },
-        excerciseIds: {
-            type: new GraphQLList(GraphQLID),
-        },
+    }),
+});
+
+const SessionType = new GraphQLObjectType({
+    name: 'Session',
+    fields: () => ({
+        startDate: { type: GraphQLDateTime },
+        endDate: { type: GraphQLDateTime },
     }),
 });
 
@@ -36,15 +43,31 @@ const TrainerType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         specialty: { type: GraphQLString },
-        routineIds: {
-            type: new GraphQLList(GraphQLID),
-        },
     }),
 });
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
+        sessions: {
+            type: new GraphQLList(SessionType),
+            resolve(parent, args) {
+                return new SessionService().getAllSessions();
+            },
+        },
+        session: {
+            type: SessionType,
+            args: {
+                excerciseId: { type: GraphQLID },
+                routineId: { type: GraphQLID },
+            },
+            resolve(parent, args) {
+                return new SessionService().getSession(
+                    args.excerciseId,
+                    args.routineId,
+                );
+            },
+        },
         excercises: {
             type: new GraphQLList(ExcerciseType),
             resolve(parent, args) {
@@ -117,18 +140,17 @@ const mutation = new GraphQLObjectType({
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 trainerId: { type: new GraphQLNonNull(GraphQLID) },
-                excerciseIds: {
-                    type: new GraphQLNonNull(new GraphQLList(GraphQLID)),
-                },
             },
             resolve(parent, args) {
                 return new RoutineService().addRoutine(
                     args.name,
                     args.trainerId,
-                    args.excerciseIds,
                 );
             },
         },
+        // createSession: {
+        //     type:
+        // },
         deleteRoutine: {
             type: RoutineType,
             args: {
