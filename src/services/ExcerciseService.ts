@@ -1,4 +1,5 @@
 import Excercise from '../models/Excercise';
+import { v4 as uuid } from 'uuid';
 import { database } from '../index';
 
 export default class ExcerciseService {
@@ -22,6 +23,19 @@ export default class ExcerciseService {
         try {
             return await excercise.findOne({
                 ...where,
+            });
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    async addExcercise(name: string) {
+        const excercise = Excercise(database);
+        try {
+            return await excercise.create({
+                id: uuid(),
+                name,
             });
         } catch (error) {
             console.error(error);

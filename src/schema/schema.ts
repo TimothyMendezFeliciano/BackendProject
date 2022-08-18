@@ -1,6 +1,7 @@
 import {
     GraphQLID,
     GraphQLList,
+    GraphQLNonNull,
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
@@ -24,20 +25,7 @@ const RoutineType = new GraphQLObjectType({
         name: { type: GraphQLString },
         trainerId: { type: GraphQLID },
         excerciseIds: {
-            type: ExcerciseType,
-            args: {
-                id: { type: GraphQLID, defaultValue: '' },
-                name: { type: GraphQLString, defaultValue: '' },
-            },
-            resolve(parent, args) {
-                if (args.id || args.name) {
-                    return new ExcerciseService().getExcercise(
-                        args.id,
-                        args.name,
-                    );
-                }
-                return new ExcerciseService().getAllExcercises();
-            },
+            type: new GraphQLList(GraphQLID),
         },
     }),
 });
@@ -49,17 +37,7 @@ const TrainerType = new GraphQLObjectType({
         name: { type: GraphQLString },
         specialty: { type: GraphQLString },
         routineIds: {
-            type: RoutineType,
-            args: {
-                id: { type: GraphQLID, defaultValue: '' },
-                name: { type: GraphQLString, defaultValue: '' },
-            },
-            resolve(parent, args) {
-                if (args.id || args.name) {
-                    return new RoutineService().getRoutine(args.id, args.name);
-                }
-                return new RoutineService().getAllRoutines();
-            },
+            type: new GraphQLList(GraphQLID),
         },
     }),
 });
@@ -109,7 +87,66 @@ const RootQuery = new GraphQLObjectType({
     },
 });
 
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addTrainer: {
+            type: TrainerType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                specialty: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new TrainerService().addTrainer(
+                    args.name,
+                    args.specialty,
+                );
+            },
+        },
+        addExcercise: {
+            type: ExcerciseType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new ExcerciseService().addExcercise(args.name);
+            },
+        },
+        addRoutine: {
+            type: RoutineType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                trainerId: { type: new GraphQLNonNull(GraphQLID) },
+                excerciseIds: {
+                    type: new GraphQLNonNull(new GraphQLList(GraphQLID)),
+                },
+            },
+            resolve(parent, args) {
+                return new RoutineService().addRoutine(
+                    args.name,
+                    args.trainerId,
+                    args.excerciseIds,
+                );
+            },
+        },
+        deleteRoutine: {
+            type: RoutineType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                trainerId: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new RoutineService().deleteRoutine(
+                    args.name,
+                    args.trainerId,
+                );
+            },
+        },
+    },
+});
+
 const schema: GraphQLSchema = new GraphQLSchema({
     query: RootQuery,
+    mutation,
 });
 export default schema;

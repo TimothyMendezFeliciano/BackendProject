@@ -1,4 +1,4 @@
-import { DataTypes, UUID } from 'sequelize';
+import { DataTypes } from 'sequelize';
 
 export default function (sequelize) {
     const trainer = sequelize.define(
@@ -9,9 +9,11 @@ export default function (sequelize) {
                 allowNull: false,
                 primaryKey: true,
                 default: DataTypes.UUIDV4,
+                unique: true,
             },
             name: {
                 type: DataTypes.STRING,
+                unique: true,
             },
             specialty: {
                 type: DataTypes.STRING,
@@ -26,7 +28,11 @@ export default function (sequelize) {
             indexes: [
                 {
                     unique: true,
-                    fields: ['id', 'name'],
+                    fields: ['id'],
+                },
+                {
+                    unique: true,
+                    fields: ['name'],
                 },
             ],
         },

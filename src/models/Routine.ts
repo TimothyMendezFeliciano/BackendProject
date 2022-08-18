@@ -18,6 +18,11 @@ export default function (sequelize) {
                 allowNull: true,
                 foreignKey: true,
             },
+            trainerId: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                foreignKey: true,
+            },
         },
         {
             indexes: [
