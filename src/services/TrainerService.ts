@@ -1,5 +1,6 @@
-import { database } from '../index';
 import Trainer from '../models/Trainer';
+import { v4 as uuid } from 'uuid';
+import { database } from '../index';
 
 export default class TrainerService {
     async getAllTrainers() {
@@ -22,6 +23,20 @@ export default class TrainerService {
         try {
             return await trainer.findOne({
                 ...where,
+            });
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    async addTrainer(name: string, specialty: string) {
+        const trainer = Trainer(database);
+        try {
+            return trainer.create({
+                id: uuid(),
+                name,
+                specialty,
             });
         } catch (error) {
             console.error(error);

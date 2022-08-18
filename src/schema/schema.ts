@@ -1,6 +1,7 @@
 import {
     GraphQLID,
     GraphQLList,
+    GraphQLNonNull,
     GraphQLObjectType,
     GraphQLSchema,
     GraphQLString,
@@ -86,7 +87,36 @@ const RootQuery = new GraphQLObjectType({
     },
 });
 
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+        addTrainer: {
+            type: TrainerType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                specialty: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new TrainerService().addTrainer(
+                    args.name,
+                    args.specialty,
+                );
+            },
+        },
+        addExcercise: {
+            type: ExcerciseType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new ExcerciseService().addExcercise(args.name);
+            },
+        },
+    },
+});
+
 const schema: GraphQLSchema = new GraphQLSchema({
     query: RootQuery,
+    mutation,
 });
 export default schema;

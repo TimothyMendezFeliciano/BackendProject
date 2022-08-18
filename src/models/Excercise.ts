@@ -12,13 +12,18 @@ export default function (sequelize) {
             },
             name: {
                 type: DataTypes.STRING,
+                unique: true,
             },
         },
         {
             indexes: [
                 {
                     unique: true,
-                    fields: ['id', 'name'],
+                    fields: ['id'],
+                },
+                {
+                    unique: true,
+                    fields: ['name'],
                 },
             ],
         },
