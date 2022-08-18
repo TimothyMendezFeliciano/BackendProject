@@ -9,6 +9,10 @@ import {
 import TrainerService from '../services/TrainerService';
 import ExcerciseService from '../services/ExcerciseService';
 import RoutineService from '../services/RoutineService';
+import { GraphQLDateTime } from 'graphql-scalars';
+import { SessionService } from '../services/SessionService';
+import TraineeService from '../services/TraineeService';
+import Trainee from '../models/Trainee';
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -24,9 +28,22 @@ const RoutineType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         trainerId: { type: GraphQLID },
-        excerciseIds: {
-            type: new GraphQLList(GraphQLID),
-        },
+    }),
+});
+
+const SessionType = new GraphQLObjectType({
+    name: 'Session',
+    fields: () => ({
+        sessionDate: { type: GraphQLDateTime },
+    }),
+});
+
+const TraineeType = new GraphQLObjectType({
+    name: 'Trainee',
+    fields: () => ({
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        interest: { type: GraphQLString },
     }),
 });
 
@@ -36,15 +53,31 @@ const TrainerType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         specialty: { type: GraphQLString },
-        routineIds: {
-            type: new GraphQLList(GraphQLID),
-        },
     }),
 });
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
+        sessions: {
+            type: new GraphQLList(SessionType),
+            resolve(parent, args) {
+                return new SessionService().getAllSessions();
+            },
+        },
+        session: {
+            type: SessionType,
+            args: {
+                excerciseId: { type: GraphQLID },
+                routineId: { type: GraphQLID },
+            },
+            resolve(parent, args) {
+                return new SessionService().getSession(
+                    args.excerciseId,
+                    args.routineId,
+                );
+            },
+        },
         excercises: {
             type: new GraphQLList(ExcerciseType),
             resolve(parent, args) {
@@ -71,9 +104,30 @@ const RootQuery = new GraphQLObjectType({
                 return new RoutineService().getRoutine(args.id, args.name);
             },
         },
+        trainees: {
+            type: new GraphQLList(TraineeType),
+            resolve(parent, args) {
+                return new TraineeService().getAllTrainees();
+            },
+        },
+        trainee: {
+            type: TraineeType,
+            args: {
+                id: { type: GraphQLID, defaultValue: '' },
+                name: { type: GraphQLString, defaultValue: '' },
+                interest: { type: GraphQLString, defaultValue: '' },
+            },
+            resolve(parent, args) {
+                return new TraineeService().getTrainee(
+                    args.id,
+                    args.name,
+                    args.interest,
+                );
+            },
+        },
         trainers: {
             type: new GraphQLList(TrainerType),
-            async resolve(parent, args) {
+            resolve(parent, args) {
                 return new TrainerService().getAllTrainers();
             },
         },
@@ -117,18 +171,17 @@ const mutation = new GraphQLObjectType({
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 trainerId: { type: new GraphQLNonNull(GraphQLID) },
-                excerciseIds: {
-                    type: new GraphQLNonNull(new GraphQLList(GraphQLID)),
-                },
             },
             resolve(parent, args) {
                 return new RoutineService().addRoutine(
                     args.name,
                     args.trainerId,
-                    args.excerciseIds,
                 );
             },
         },
+        // createSession: {
+        //     type:
+        // },
         deleteRoutine: {
             type: RoutineType,
             args: {
