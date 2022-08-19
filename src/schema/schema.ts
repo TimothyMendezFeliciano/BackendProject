@@ -207,22 +207,7 @@ const mutation = new GraphQLObjectType({
                 );
             },
         },
-        deleteRoutine: {
-            type: RoutineType,
-            args: {
-                id: { type: new GraphQLNonNull(GraphQLID) },
-                name: { type: new GraphQLNonNull(GraphQLString) },
-                trainerId: { type: new GraphQLNonNull(GraphQLString) },
-            },
-            resolve(parent, args) {
-                return new RoutineService().deleteRoutine(
-                    args.id,
-                    args.name,
-                    args.trainerId,
-                );
-            },
-        },
-        createSession: {
+        addSession: {
             type: SessionType,
             args: {
                 sessionDate: { type: GraphQLDateTime },
@@ -232,6 +217,28 @@ const mutation = new GraphQLObjectType({
             },
             resolve(parent, args) {
                 return new SessionService().addSession(args.sessionDate, args.routineId, args.traineeId, args.excerciseId);
+            },
+        },
+        deleteExcercise: {
+            type: ExcerciseType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) },
+            },
+            resolve(parent, args) {
+                return new ExcerciseService().deleteExcercise(args.id);
+            },
+        },
+        deleteRoutine: {
+            type: RoutineType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) },
+                trainerId: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                return new RoutineService().deleteRoutine(
+                    args.id,
+                    args.trainerId,
+                );
             },
         },
         deleteSession: {

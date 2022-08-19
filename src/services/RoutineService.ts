@@ -58,14 +58,13 @@ export default class RoutineService {
         }
     }
 
-    async deleteRoutine(id: string, name: string, trainerId: string) {
+    async deleteRoutine(id: string, trainerId: string) {
         const routine = Routine(database);
         try {
-            if (id && name && trainerId) {
+            if (id && trainerId) {
                 return await routine.destroy({
                     where: {
                         id,
-                        name,
                         trainerId,
                     },
                 });
