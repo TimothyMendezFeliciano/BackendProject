@@ -51,6 +51,12 @@ const SessionType = new GraphQLObjectType({
                 return new TraineeService().getTrainee(parent.traineeId);
             },
         },
+        excercise: {
+            type: ExcerciseType,
+            resolve(parent, args) {
+                return new ExcerciseService().getExcercise(parent.excerciseId);
+            },
+        },
     }),
 });
 
@@ -201,20 +207,47 @@ const mutation = new GraphQLObjectType({
                 );
             },
         },
-        // createSession: {
-        //     type:
-        // },
+        addSession: {
+            type: SessionType,
+            args: {
+                sessionDate: { type: GraphQLDateTime },
+                routineId: { type: GraphQLID },
+                traineeId: { type: GraphQLID },
+                excerciseId: { type: GraphQLID },
+            },
+            resolve(parent, args) {
+                return new SessionService().addSession(args.sessionDate, args.routineId, args.traineeId, args.excerciseId);
+            },
+        },
+        deleteExcercise: {
+            type: ExcerciseType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) },
+            },
+            resolve(parent, args) {
+                return new ExcerciseService().deleteExcercise(args.id);
+            },
+        },
         deleteRoutine: {
             type: RoutineType,
             args: {
-                name: { type: new GraphQLNonNull(GraphQLString) },
+                id: { type: new GraphQLNonNull(GraphQLID) },
                 trainerId: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
                 return new RoutineService().deleteRoutine(
-                    args.name,
+                    args.id,
                     args.trainerId,
                 );
+            },
+        },
+        deleteSession: {
+            type: SessionType,
+            args: {
+                id: { type: GraphQLID },
+            },
+            resolve(parent, args) {
+                return new SessionService().deleteSession(args.id);
             },
         },
     },

@@ -46,47 +46,30 @@ export default class RoutineService {
 
     async addRoutine(name: string, trainerId: string) {
         const routine = Routine(database);
-        const trainer = Trainer(database);
         try {
-            const result = await routine.create({
+            return await routine.create({
                 id: uuid(),
                 name,
                 trainerId,
             });
-            const myTrainer = trainer.findAll({
-                where: {
-                    id: trainerId,
-                },
-            });
-            await trainer.update(
-                {
-                    routineIds: [...myTrainer.routineIds, result.id],
-                },
-                {
-                    where: {
-                        id: trainerId,
-                    },
-                },
-            );
-            return result;
         } catch (error) {
             console.error(error);
             return [];
         }
     }
 
-    async deleteRoutine(name: string, trainerId: string) {
+    async deleteRoutine(id: string, trainerId: string) {
         const routine = Routine(database);
         try {
-            if (name && trainerId) {
+            if (id && trainerId) {
                 return await routine.destroy({
                     where: {
-                        name,
+                        id,
                         trainerId,
                     },
                 });
             }
-            throw Error('Name and TrainerId are necessary');
+            throw Error('Id, Name and TrainerId are necessary');
         } catch (error) {
             console.error(error);
             return [];

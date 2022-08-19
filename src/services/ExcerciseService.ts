@@ -42,4 +42,21 @@ export default class ExcerciseService {
             return [];
         }
     }
+
+    async deleteExcercise(id: string) {
+        const excercise = Excercise(database);
+        try {
+            if (id) {
+                return await excercise.destroy({
+                    where: {
+                        id,
+                    },
+                });
+            }
+            throw Error('Excercise Id is required');
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
 }

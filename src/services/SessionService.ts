@@ -1,4 +1,5 @@
 import Session from '../models/Session';
+import { v4 as uuid } from 'uuid';
 import { database } from '../index';
 
 export default class SessionService {
@@ -23,6 +24,39 @@ export default class SessionService {
             return await session.findAll({
                 ...where,
             });
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    async addSession(sessionDate: Date, routineId: string, traineeId: string, excerciseId: string) {
+        const session = Session(database);
+        try {
+            return await session.create({
+                id: uuid(),
+                sessionDate,
+                routineId,
+                traineeId,
+                excerciseId,
+            });
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    async deleteSession(id: string) {
+        const session = Session(database);
+        try {
+            if (id) {
+                return await session.destroy({
+                    where: {
+                        id,
+                    },
+                });
+            }
+            throw Error('Session Id is required');
         } catch (error) {
             console.error(error);
             return [];
