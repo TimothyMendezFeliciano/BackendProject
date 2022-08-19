@@ -201,20 +201,30 @@ const mutation = new GraphQLObjectType({
                 );
             },
         },
-        // createSession: {
-        //     type:
-        // },
         deleteRoutine: {
             type: RoutineType,
             args: {
+                id: { type: new GraphQLNonNull(GraphQLID) },
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 trainerId: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
                 return new RoutineService().deleteRoutine(
+                    args.id,
                     args.name,
                     args.trainerId,
                 );
+            },
+        },
+        createSession: {
+            type: SessionType,
+            args: {
+                sessionDate: { type: GraphQLDateTime },
+                routineId: { type: GraphQLID },
+                traineeId: { type: GraphQLID },
+            },
+            resolve(parent, args) {
+                return new SessionService().addSession(args.sessionDate, args.routineId, args.traineeId);
             },
         },
     },
