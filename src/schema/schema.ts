@@ -51,6 +51,12 @@ const SessionType = new GraphQLObjectType({
                 return new TraineeService().getTrainee(parent.traineeId);
             },
         },
+        excercise: {
+            type: ExcerciseType,
+            resolve(parent, args) {
+                return new ExcerciseService().getExcercise(parent.excerciseId);
+            },
+        },
     }),
 });
 
@@ -222,9 +228,19 @@ const mutation = new GraphQLObjectType({
                 sessionDate: { type: GraphQLDateTime },
                 routineId: { type: GraphQLID },
                 traineeId: { type: GraphQLID },
+                excerciseId: { type: GraphQLID },
             },
             resolve(parent, args) {
-                return new SessionService().addSession(args.sessionDate, args.routineId, args.traineeId);
+                return new SessionService().addSession(args.sessionDate, args.routineId, args.traineeId, args.excerciseId);
+            },
+        },
+        deleteSession: {
+            type: SessionType,
+            args: {
+                id: { type: GraphQLID },
+            },
+            resolve(parent, args) {
+                return new SessionService().deleteSession(args.id);
             },
         },
     },
