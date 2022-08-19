@@ -10,9 +10,8 @@ import TrainerService from '../services/TrainerService';
 import ExcerciseService from '../services/ExcerciseService';
 import RoutineService from '../services/RoutineService';
 import { GraphQLDateTime } from 'graphql-scalars';
-import { SessionService } from '../services/SessionService';
+import SessionService from '../services/SessionService';
 import TraineeService from '../services/TraineeService';
-import Trainee from '../models/Trainee';
 
 const ExcerciseType = new GraphQLObjectType({
     name: 'Excercise',
@@ -27,7 +26,12 @@ const RoutineType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        trainerId: { type: GraphQLID },
+        trainer: {
+            type: TrainerType,
+            resolve(parent, args) {
+                return new TrainerService().getTrainer(parent.trainerId);
+            },
+        },
     }),
 });
 
@@ -35,6 +39,18 @@ const SessionType = new GraphQLObjectType({
     name: 'Session',
     fields: () => ({
         sessionDate: { type: GraphQLDateTime },
+        routine: {
+            type: RoutineType,
+            resolve(parent, args) {
+                return new RoutineService().getRoutine(parent.routineId);
+            },
+        },
+        trainee: {
+            type: TraineeType,
+            resolve(parent, args) {
+                return new TraineeService().getTrainee(parent.traineeId);
+            },
+        },
     }),
 });
 
@@ -44,6 +60,12 @@ const TraineeType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         interest: { type: GraphQLString },
+        trainer: {
+            type: TrainerType,
+            resolve(parent, args) {
+                return new TrainerService().getTrainer(parent.trainerId);
+            },
+        },
     }),
 });
 

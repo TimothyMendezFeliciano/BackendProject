@@ -1,7 +1,7 @@
 import Session from '../models/Session';
 import { database } from '../index';
 
-export class SessionService {
+export default class SessionService {
     async getAllSessions() {
         const session = Session(database);
 
