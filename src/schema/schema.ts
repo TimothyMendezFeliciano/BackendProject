@@ -38,7 +38,7 @@ const RoutineType = new GraphQLObjectType({
 const SessionType = new GraphQLObjectType({
     name: 'Session',
     fields: () => ({
-        sessionDate: { type: GraphQLDateTime },
+        sessionDate: { type: GraphQLString },
         routine: {
             type: RoutineType,
             resolve(parent, args) {
@@ -141,9 +141,9 @@ const RootQuery = new GraphQLObjectType({
         trainee: {
             type: TraineeType,
             args: {
-                id: { type: GraphQLID, defaultValue: '' },
-                name: { type: GraphQLString, defaultValue: '' },
-                interest: { type: GraphQLString, defaultValue: '' },
+                id: { type: GraphQLID },
+                name: { type: GraphQLString },
+                interest: { type: GraphQLString },
             },
             resolve(parent, args) {
                 return new TraineeService().getTrainee(

@@ -12,7 +12,7 @@ export default function (sequelize) {
             },
             name: {
                 type: DataTypes.STRING,
-                unique: true,
+                unique: true
             },
         },
         {

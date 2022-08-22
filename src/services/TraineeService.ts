@@ -24,9 +24,9 @@ export default class TraineeService {
         if (interest) where.push(interest);
 
         try {
-            return await trainee.findAll({
-                ...where,
-            });
+            return await trainee.findOne({
+                ...where
+            })
         } catch (error) {
             console.error(error);
             return [];
