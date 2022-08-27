@@ -1,5 +1,6 @@
 import Trainee from '../models/Trainee';
 import { database } from '../index';
+import Trainer from '../models/Trainer';
 
 export default class TraineeService {
     async getAllTrainees() {
@@ -25,8 +26,31 @@ export default class TraineeService {
 
         try {
             return await trainee.findOne({
-                ...where
-            })
+                ...where,
+            });
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    async subscribeToTrainer(
+        traineeId: string,
+        trainerId: string,
+    ) {
+        const traineeTable = Trainee(database);
+
+        const trainee = await traineeTable.findByPk(traineeId);
+        trainee.trainerId = trainerId;
+        await trainee.save();
+        // console.log('For Predro', trainee);
+        try {
+            // const result = await trainee.update({
+            //     trainerId,
+            // });
+            // await trainee.save();
+            // return result;
+            return trainee;
         } catch (error) {
             console.error(error);
             return [];

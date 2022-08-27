@@ -1,7 +1,6 @@
 import Routine from '../models/Routine';
 import { database } from '../index';
 import { v4 as uuid } from 'uuid';
-import Trainer from '../models/Trainer';
 
 export default class RoutineService {
     async getAllRoutines() {
