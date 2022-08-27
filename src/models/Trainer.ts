@@ -18,6 +18,9 @@ export default function (sequelize) {
             specialty: {
                 type: DataTypes.STRING,
             },
+            publicAddress: {
+                type: DataTypes.STRING
+            }
         },
         {
             indexes: [
