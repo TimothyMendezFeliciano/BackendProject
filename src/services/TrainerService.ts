@@ -13,12 +13,13 @@ export default class TrainerService {
         }
     }
 
-    async getTrainer(id: string = '', name: string = '') {
+    async getTrainer(id: string = '', name: string = '', publicAddress: string = '') {
         const trainer = Trainer(database);
         // TODO: Build Utility method to construct where clause
         const where: string[] = [];
         if (id) where.push(id);
         if (name) where.push(name);
+        if (publicAddress) where.push(publicAddress);
 
         try {
             return await trainer.findOne({

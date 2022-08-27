@@ -69,6 +69,7 @@ const TraineeType = new GraphQLObjectType({
         trainer: {
             type: TrainerType,
             resolve(parent, args) {
+                console.log('Shifting index', [parent, parent.trainerId]);
                 return new TrainerService().getTrainer(parent.trainerId);
             },
         },
@@ -81,6 +82,7 @@ const TrainerType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         specialty: { type: GraphQLString },
+        publicAddress: { type: GraphQLString },
     }),
 });
 
@@ -161,9 +163,9 @@ const RootQuery = new GraphQLObjectType({
         },
         trainer: {
             type: TrainerType,
-            args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
+            args: { id: { type: GraphQLID }, name: { type: GraphQLString }, publicAddress: { type: GraphQLString } },
             resolve(parent, args) {
-                return new TrainerService().getTrainer(args.id, args.name);
+                return new TrainerService().getTrainer(args.id, args.name, args.publicAddress);
             },
         },
     },
@@ -172,6 +174,18 @@ const RootQuery = new GraphQLObjectType({
 const mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
+        subscribeToTrainer: {
+            type: TraineeType,
+            args: {
+                traineeId: { type: new GraphQLNonNull(GraphQLID) },
+                trainerId: { type: new GraphQLNonNull(GraphQLID) },
+            },
+            async resolve(parent, args) {
+                const result = await new TraineeService().subscribeToTrainer(args.traineeId, args.trainerId);
+                console.log('Result my dudde', result);
+                return result;
+            },
+        },
         addTrainer: {
             type: TrainerType,
             args: {
