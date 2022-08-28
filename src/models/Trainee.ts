@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-export default function (sequelize) {
+export default function(sequelize) {
     const trainee = sequelize.define('trainee', {
         id: {
             type: DataTypes.UUID,
@@ -14,6 +14,9 @@ export default function (sequelize) {
             allowNull: false,
         },
         interest: {
+            type: DataTypes.STRING,
+        },
+        publicAddress: {
             type: DataTypes.STRING,
         },
     });

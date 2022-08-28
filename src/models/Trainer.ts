@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-export default function (sequelize) {
+export default function(sequelize) {
     const trainer = sequelize.define(
         'trainer',
         {
@@ -19,8 +19,8 @@ export default function (sequelize) {
                 type: DataTypes.STRING,
             },
             publicAddress: {
-                type: DataTypes.STRING
-            }
+                type: DataTypes.STRING,
+            },
         },
         {
             indexes: [
