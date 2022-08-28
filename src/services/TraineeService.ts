@@ -17,12 +17,14 @@ export default class TraineeService {
         id: string = '',
         name: string = '',
         interest: string = '',
+        publicAddress: string = ''
     ) {
         const trainee = Trainee(database);
         const where: string[] = [];
         if (id) where.push(id);
         if (name) where.push(name);
         if (interest) where.push(interest);
+        if (publicAddress) where.push(publicAddress)
 
         try {
             return await trainee.findOne({

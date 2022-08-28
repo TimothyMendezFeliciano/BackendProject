@@ -146,12 +146,14 @@ const RootQuery = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString },
                 interest: { type: GraphQLString },
+                publicAddress: {type: GraphQLString}
             },
             resolve(parent, args) {
                 return new TraineeService().getTrainee(
                     args.id,
                     args.name,
                     args.interest,
+                    args.publicAddress
                 );
             },
         },
