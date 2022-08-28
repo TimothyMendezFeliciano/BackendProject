@@ -31,13 +31,14 @@ export default class TrainerService {
         }
     }
 
-    async addTrainer(name: string, specialty: string) {
+    async addTrainer(name: string, specialty: string, publicAddress: string) {
         const trainer = Trainer(database);
         try {
             return await trainer.create({
                 id: uuid(),
                 name,
                 specialty,
+                publicAddress,
             });
         } catch (error) {
             console.error(error);

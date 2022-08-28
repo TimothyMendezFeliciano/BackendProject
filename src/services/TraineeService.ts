@@ -42,7 +42,6 @@ export default class TraineeService {
                 name,
                 interest,
                 publicAddress,
-                trainerId: uuid(),
             });
         } catch (error) {
             console.error(error);

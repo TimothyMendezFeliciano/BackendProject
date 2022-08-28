@@ -212,11 +212,13 @@ const mutation = new GraphQLObjectType({
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 specialty: { type: new GraphQLNonNull(GraphQLString) },
+                publicAddress: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
                 return new TrainerService().addTrainer(
                     args.name,
                     args.specialty,
+                    args.publicAddress
                 );
             },
         },

@@ -19,6 +19,10 @@ export default function(sequelize) {
         publicAddress: {
             type: DataTypes.STRING,
         },
+        trainerId: {
+            type: DataTypes.UUID,
+            foreignKey: true,
+        },
     });
 
     trainee.associate = (models) => {
