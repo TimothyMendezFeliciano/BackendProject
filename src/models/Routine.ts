@@ -13,6 +13,10 @@ export default function (sequelize) {
             name: {
                 type: DataTypes.STRING,
             },
+            trainerId: {
+                type: DataTypes.UUID,
+                foreignKey: true,
+            },
         },
         {
             indexes: [
