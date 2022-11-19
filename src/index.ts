@@ -5,6 +5,8 @@ import cors from 'cors';
 import { excerciseRouter } from './routes/Excercise';
 import { sessionRouter } from './routes/Session';
 import { routineRouter } from './routes/Routines';
+import { traineeRouter } from './routes/Trainee';
+import { trainerRouter } from './routes/Trainer';
 
 const port = process.env.DEV_PORT;
 
@@ -17,6 +19,8 @@ app.use(cors());
 app.use('/excercise', excerciseRouter);
 app.use('/session', sessionRouter);
 app.use('/routine', routineRouter);
+app.use('/trainee', traineeRouter);
+app.use('/trainer', trainerRouter);
 
 app.listen(port, async () => {
     database = await database.init();

@@ -86,56 +86,6 @@ const TrainerType = new GraphQLObjectType({
     }),
 });
 
-const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-        trainees: {
-            type: new GraphQLList(TraineeType),
-            resolve(parent, args) {
-                return new TraineeService().getAllTrainees();
-            },
-        },
-        trainee: {
-            type: TraineeType,
-            args: {
-                id: { type: GraphQLID },
-                name: { type: GraphQLString },
-                interest: { type: GraphQLString },
-                publicAddress: { type: GraphQLString },
-            },
-            resolve(parent, args) {
-                return new TraineeService().getTrainee(
-                    args.id,
-                    args.name,
-                    args.interest,
-                    args.publicAddress,
-                );
-            },
-        },
-        trainers: {
-            type: new GraphQLList(TrainerType),
-            resolve(parent, args) {
-                return new TrainerService().getAllTrainers();
-            },
-        },
-        trainer: {
-            type: TrainerType,
-            args: {
-                id: { type: GraphQLID },
-                name: { type: GraphQLString },
-                publicAddress: { type: GraphQLString },
-            },
-            resolve(parent, args) {
-                return new TrainerService().getTrainer(
-                    args.id,
-                    args.name,
-                    args.publicAddress,
-                );
-            },
-        },
-    },
-});
-
 const mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
@@ -271,7 +221,6 @@ const mutation = new GraphQLObjectType({
 });
 
 const schema: GraphQLSchema = new GraphQLSchema({
-    query: RootQuery,
     mutation,
 });
 export default schema;
