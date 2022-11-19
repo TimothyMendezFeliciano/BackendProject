@@ -89,51 +89,6 @@ const TrainerType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        sessions: {
-            type: new GraphQLList(SessionType),
-            resolve(parent, args) {
-                return new SessionService().getAllSessions();
-            },
-        },
-        session: {
-            type: SessionType,
-            args: {
-                excerciseId: { type: GraphQLID },
-                routineId: { type: GraphQLID },
-            },
-            resolve(parent, args) {
-                return new SessionService().getSession(
-                    args.excerciseId,
-                    args.routineId,
-                );
-            },
-        },
-        excercises: {
-            type: new GraphQLList(ExcerciseType),
-            resolve(parent, args) {
-                return new ExcerciseService().getAllExcercises();
-            },
-        },
-        excercise: {
-            type: ExcerciseType,
-            args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
-            resolve(parent, args) {
-                return new ExcerciseService().getExcercise(args.id, args.name);
-            },
-        },
-        routines: {
-            type: new GraphQLList(RoutineType),
-            resolve(parent, args) {
-                return new RoutineService().getAllRoutines();
-            },
-        },
-        routine: {
-            type: RoutineType,
-            args: { id: { type: GraphQLID }, name: { type: GraphQLString } },
-            resolve(parent, args) {
-                return new RoutineService().getRoutine(args.id, args.name);
-            },
-        },
         trainees: {
             type: new GraphQLList(TraineeType),
             resolve(parent, args) {
@@ -146,14 +101,14 @@ const RootQuery = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString },
                 interest: { type: GraphQLString },
-                publicAddress: {type: GraphQLString}
+                publicAddress: { type: GraphQLString },
             },
             resolve(parent, args) {
                 return new TraineeService().getTrainee(
                     args.id,
                     args.name,
                     args.interest,
-                    args.publicAddress
+                    args.publicAddress,
                 );
             },
         },
@@ -165,9 +120,17 @@ const RootQuery = new GraphQLObjectType({
         },
         trainer: {
             type: TrainerType,
-            args: { id: { type: GraphQLID }, name: { type: GraphQLString }, publicAddress: { type: GraphQLString } },
+            args: {
+                id: { type: GraphQLID },
+                name: { type: GraphQLString },
+                publicAddress: { type: GraphQLString },
+            },
             resolve(parent, args) {
-                return new TrainerService().getTrainer(args.id, args.name, args.publicAddress);
+                return new TrainerService().getTrainer(
+                    args.id,
+                    args.name,
+                    args.publicAddress,
+                );
             },
         },
     },
@@ -183,7 +146,10 @@ const mutation = new GraphQLObjectType({
                 newName: { type: new GraphQLNonNull(GraphQLID) },
             },
             async resolve(parent, args) {
-                return new TraineeService().changeName(args.traineeId, args.newName);
+                return new TraineeService().changeName(
+                    args.traineeId,
+                    args.newName,
+                );
             },
         },
         subscribeToTrainer: {
@@ -193,7 +159,10 @@ const mutation = new GraphQLObjectType({
                 trainerId: { type: new GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args) {
-                const result = new TraineeService().subscribeToTrainer(args.traineeId, args.trainerId);
+                const result = new TraineeService().subscribeToTrainer(
+                    args.traineeId,
+                    args.trainerId,
+                );
                 console.log('Result my dudde', result);
                 return result;
             },
@@ -206,7 +175,11 @@ const mutation = new GraphQLObjectType({
                 publicAddress: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
-                return new TraineeService().addTrainee(args.name, args.interest, args.publicAddress);
+                return new TraineeService().addTrainee(
+                    args.name,
+                    args.interest,
+                    args.publicAddress,
+                );
             },
         },
         addTrainer: {
@@ -220,7 +193,7 @@ const mutation = new GraphQLObjectType({
                 return new TrainerService().addTrainer(
                     args.name,
                     args.specialty,
-                    args.publicAddress
+                    args.publicAddress,
                 );
             },
         },
@@ -255,7 +228,12 @@ const mutation = new GraphQLObjectType({
                 excerciseId: { type: GraphQLID },
             },
             resolve(parent, args) {
-                return new SessionService().addSession(args.sessionDate, args.routineId, args.traineeId, args.excerciseId);
+                return new SessionService().addSession(
+                    args.sessionDate,
+                    args.routineId,
+                    args.traineeId,
+                    args.excerciseId,
+                );
             },
         },
         deleteExcercise: {
