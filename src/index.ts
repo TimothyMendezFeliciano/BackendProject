@@ -1,9 +1,12 @@
 import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
-import schema from './schema/schema';
 import 'dotenv/config';
 import DatabaseConnection from './database/DatabaseConnection';
 import cors from 'cors';
+import { excerciseRouter } from './routes/Excercise';
+import { sessionRouter } from './routes/Session';
+import { routineRouter } from './routes/Routines';
+import { traineeRouter } from './routes/Trainee';
+import { trainerRouter } from './routes/Trainer';
 
 const port = process.env.DEV_PORT;
 
@@ -13,15 +16,13 @@ export let database = new DatabaseConnection();
 
 app.use(cors());
 
-app.use(
-    '/graphql',
-    graphqlHTTP({
-        schema,
-        graphiql: true,
-    }),
-);
+app.use('/excercise', excerciseRouter);
+app.use('/session', sessionRouter);
+app.use('/routine', routineRouter);
+app.use('/trainee', traineeRouter);
+app.use('/trainer', trainerRouter);
 
 app.listen(port, async () => {
     database = await database.init();
-    console.log(`Server running on http://localhost:${port}/graphql`);
+    console.log(`Server running on http://localhost:${port}/`);
 });
