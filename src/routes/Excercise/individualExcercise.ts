@@ -2,7 +2,6 @@ import ExcerciseService from '../../services/ExcerciseService';
 
 export const individualExcercise = async (req, res, next) => {
     try {
-        console.log('Chickeen', [req.query.id, req.query.name]);
         const result = [
             await new ExcerciseService().getExcercise(
                 req.query.id,
