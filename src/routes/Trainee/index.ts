@@ -6,7 +6,7 @@ import { addTrainee } from './addTrainee';
 
 export const traineeRouter = express.Router();
 
-traineeRouter.get('', allTrainees);
+traineeRouter.get('/', allTrainees);
 traineeRouter.get('/individual', individualTrainee);
 traineeRouter.post('/subscribeToTrainer', subscribeToTrainer);
 traineeRouter.post('/addTrainee', addTrainee);

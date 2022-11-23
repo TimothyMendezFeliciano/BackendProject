@@ -5,6 +5,6 @@ import { addTrainer } from './addTrainer';
 
 export const trainerRouter = express.Router();
 
-trainerRouter.get('', allTrainers);
+trainerRouter.get('/', allTrainers);
 trainerRouter.get('/individual', individualTrainer);
 trainerRouter.post('/addTrainer', addTrainer);
