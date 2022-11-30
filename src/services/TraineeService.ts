@@ -17,14 +17,14 @@ export default class TraineeService {
         id: string = '',
         name: string = '',
         interest: string = '',
-        publicAddress: string = ''
+        publicAddress: string = '',
     ) {
         const trainee = Trainee(database);
         const where: string[] = [];
         if (id) where.push(id);
         if (name) where.push(name);
         if (interest) where.push(interest);
-        if (publicAddress) where.push(publicAddress)
+        if (publicAddress) where.push(publicAddress);
 
         try {
             return await trainee.findOne({
@@ -39,12 +39,14 @@ export default class TraineeService {
     async addTrainee(name: string, interest: string, publicAddress: string) {
         const trainee = Trainee(database);
         try {
-            return await trainee.create({
+            const result = await trainee.create({
                 id: uuid(),
                 name,
                 interest,
                 publicAddress,
             });
+
+            return result;
         } catch (error) {
             console.error(error);
             return [];
@@ -72,10 +74,7 @@ export default class TraineeService {
         }
     }
 
-    async subscribeToTrainer(
-        traineeId: string,
-        trainerId: string,
-    ) {
+    async subscribeToTrainer(traineeId: string, trainerId: string) {
         const traineeTable = Trainee(database);
 
         const where: string[] = [];

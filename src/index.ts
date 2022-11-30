@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import 'dotenv/config';
 import DatabaseConnection from './database/DatabaseConnection';
 import cors from 'cors';
@@ -15,6 +16,7 @@ const app = express();
 export let database = new DatabaseConnection();
 
 app.use(cors());
+app.use(bodyParser.json());
 
 app.use('/excercise', excerciseRouter);
 app.use('/session', sessionRouter);

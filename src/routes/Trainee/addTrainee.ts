@@ -7,7 +7,7 @@ export const addTrainee = async (req, res, next) => {
             req.body.interest,
             req.body.publicAddress,
         );
-        return result;
+        return res.status(200).send(result);
     } catch (error) {
         console.error(error);
         return res.status(400).send([]);
