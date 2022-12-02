@@ -46,6 +46,7 @@ export default class DatabaseConnection {
             }
         });
 
-        return await cachedDB.sync({ force: false });
+        // TODO: Change to false when done
+        return await cachedDB.sync({ force: true });
     }
 }

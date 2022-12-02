@@ -74,6 +74,33 @@ export default class TraineeService {
         }
     }
 
+    async uploadProfileImage(
+        traineeId: string,
+        profileImagePath: string,
+        mimetype: string,
+        publicAddress?: string,
+    ) {
+        const traineeTable = Trainee(database);
+        const where: string[] = [];
+        if (traineeId) where.push(traineeId);
+        if (publicAddress) where.push(publicAddress);
+
+        try {
+            const trainee = await traineeTable.findOne({
+                ...where,
+            });
+            trainee.update({
+                profileImagePath,
+                mimetype,
+            });
+
+            return await trainee.reload();
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
     async subscribeToTrainer(traineeId: string, trainerId: string) {
         const traineeTable = Trainee(database);
 

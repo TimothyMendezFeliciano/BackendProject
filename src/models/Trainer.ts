@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 
-export default function(sequelize) {
+export default function (sequelize) {
     const trainer = sequelize.define(
         'trainer',
         {
@@ -13,13 +13,21 @@ export default function(sequelize) {
             },
             name: {
                 type: DataTypes.STRING,
-                unique: true,
             },
             specialty: {
                 type: DataTypes.STRING,
             },
             publicAddress: {
                 type: DataTypes.STRING,
+                unique: true,
+            },
+            profileImagePath: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            mimetype: {
+                type: DataTypes.STRING,
+                allowNull: true,
             },
         },
         {
@@ -30,7 +38,7 @@ export default function(sequelize) {
                 },
                 {
                     unique: true,
-                    fields: ['name'],
+                    fields: ['publicAddress'],
                 },
             ],
         },

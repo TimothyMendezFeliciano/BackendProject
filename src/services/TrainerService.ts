@@ -13,9 +13,12 @@ export default class TrainerService {
         }
     }
 
-    async getTrainer(id: string = '', name: string = '', publicAddress: string = '') {
+    async getTrainer(
+        id: string = '',
+        name: string = '',
+        publicAddress: string = '',
+    ) {
         const trainer = Trainer(database);
-        // TODO: Build Utility method to construct where clause
         const where: string[] = [];
         if (id) where.push(id);
         if (name) where.push(name);
@@ -43,6 +46,52 @@ export default class TrainerService {
         } catch (error) {
             console.error(error);
             return [];
+        }
+    }
+
+    async uploadProfileImage(
+        trainerId: string,
+        profileImagePath: string,
+        mimetype: string,
+        publicAddress?: string,
+    ) {
+        const trainerTable = await Trainer(database);
+
+        const where: string[] = [];
+        if (trainerId) where.push(trainerTable);
+        if (publicAddress) where.push(publicAddress);
+
+        try {
+            const trainer = await trainerTable.findOne({
+                ...where,
+            });
+            trainer.update({
+                profileImagePath,
+                mimetype,
+            });
+
+            return await trainer.reload();
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    async deleteTrainer(publicAddress: string) {
+        try {
+            const trainerTable = await Trainer(database);
+            const where: string[] = [];
+            where.push(publicAddress);
+
+            const trainer = await trainerTable.findOne({
+                ...where,
+            });
+
+            await trainer.destroy();
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
         }
     }
 }

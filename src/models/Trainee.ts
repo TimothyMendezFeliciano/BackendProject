@@ -24,6 +24,14 @@ export default function (sequelize) {
             type: DataTypes.UUID,
             foreignKey: true,
         },
+        profileImagePath: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        mimetype: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
 
     trainee.associate = (models) => {
